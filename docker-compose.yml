@@ -1,0 +1,15 @@
+services:
+  web:
+    # Берем Dockerfile из каталога news_blog
+    build: /news_blog
+    # Запускаем тестовый сервер
+    command: python manage.py runserver 0.0.0.0:8000
+    # куда будут помещены данные из каталога news_blog
+    volumes:
+      - ./news_blog/:/usr/src/news_blog/
+    # Открываем порт 8000 внутри и снаружи
+    ports:
+      - 8000:8000
+    # Файл содержащий переменные для контейнера
+    env_file:
+      - ./.env
