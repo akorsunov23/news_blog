@@ -20,8 +20,8 @@ class News(models.Model):
 
 
 class Comment(models.Model):
-	news = models.ForeignKey(News, on_delete=models.PROTECT, verbose_name='новость', related_name='comments')
-	author = models.ForeignKey(CustomUser, on_delete=models.CASCADE, verbose_name='автор комментария')
+	news = models.ForeignKey(News, on_delete=models.CASCADE, verbose_name='новость', related_name='comments')
+	author = models.ForeignKey(CustomUser, on_delete=models.PROTECT, verbose_name='автор комментария')
 	comment = models.TextField(null=False, blank=False, verbose_name='комментарий')
 	created_at = models.DateTimeField(auto_now_add=True, verbose_name='дата добавления')
 	update_at = models.DateTimeField(auto_now=True, verbose_name='дата изменения')

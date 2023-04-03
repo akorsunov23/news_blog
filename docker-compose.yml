@@ -1,15 +1,35 @@
+version: '3'
+
+volumes:
+    pgdata:
+        driver: local
 services:
-  web:
-    # Берем Dockerfile из каталога news_blog
-    build: /news_blog
-    # Запускаем тестовый сервер
-    command: python manage.py runserver 0.0.0.0:8000
-    # куда будут помещены данные из каталога news_blog
-    volumes:
-      - ./news_blog/:/usr/src/news_blog/
-    # Открываем порт 8000 внутри и снаружи
-    ports:
-      - 8000:8000
-    # Файл содержащий переменные для контейнера
-    env_file:
-      - ./.env
+    nginx:
+        restart: always
+        image: nginx:latest
+        expose:
+          - 8080
+        ports:
+          - "80:8080"
+
+        volumes:
+            - ./news_blog/static:/srv/www/news_blog/static
+            - ./news_blog/media:/srv/www/news_blog/media
+            - ./news_blog/logs:/srv/www/news_blog/logs
+            - ./docker/nginx:/etc/nginx/conf.d
+        depends_on:
+            - python
+    python:
+        restart: always
+        build:
+            context: .
+            dockerfile: docker/python/Dockerfile
+        volumes:
+            - ./news_blog:/srv/www/news_blog
+        expose:
+          - 8000
+        ports:
+            - 8000:8000
+        command: "gunicorn -c gunicorn.py news_blog.wsgi"
+        env_file:
+          - ./.env
