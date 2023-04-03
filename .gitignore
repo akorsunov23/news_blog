@@ -1,5 +1,5 @@
-news_blog/.idea/
+.idea/
 venv/
 db.sqlite3
 __pycache__/
-../.env
+.env
